@@ -6,11 +6,17 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 const http = require('http').Server(app);
-const io = require('socket.io')(http);
+const io = require('socket.io')(http, {
+    cors: {
+        origin: "localhost",
+        methods: ["GET", "POST"],
+        credentials: true
+    }
+});
 
-app.use(express.static('/node_modules', {root: "./"}));
+app.use(express.static('/node_modules', { root: "./" }));
 app.get('/', (req, res) => {
-    res.sendFile('/index.html', {root: "../front/checkingticket/public/"});
+    res.sendFile('/index.html', { root: "../front/checkingticket/" });
 });
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -29,7 +35,7 @@ io.on('connection', socket => {
 //test route
 
 router.get('/', (req, res) => {
-    res.json({ message: 'welcome '})
+    res.json({ message: 'welcome ' })
 });
 
 
